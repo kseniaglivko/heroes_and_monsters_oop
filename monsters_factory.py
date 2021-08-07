@@ -9,8 +9,9 @@ from game_stats import GameStats
 class Monster(ABC):
     """Абстрактный класс чудовищ."""
 
-    def __init__(self, power):
+    def __init__(self, game, power):
         super().__init__()
+        self.game = game
         self.monster_power = power
 
     @abstractmethod

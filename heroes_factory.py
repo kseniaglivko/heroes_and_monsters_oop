@@ -9,8 +9,9 @@ from game_stats import GameStats
 class Hero(ABC):
     """Абстрактный класс героя."""
 
-    def __init__(self, power, item):
+    def __init__(self, game, power, item):
         super().__init__()
+        self.game = game
         self.take_item = item
         self.attack_power = power
 

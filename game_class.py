@@ -6,6 +6,7 @@
 from game_stats import GameStats
 from heroes_factory import Hero
 from monsters_factory import Monster, WizardFactory, SkeletonFactory, GoblinFactory
+from items_factory import Totem, Apple, Sword, Spell, Bow, Arrows, TotemFactory, AppleFactory, SwordFactory, SpellFactory, BowFactory, ArrowsFactory
 import random
 
 
@@ -13,8 +14,9 @@ class Game:
     def __init__(self):
 
         self.game_stats = GameStats(self)
-        self.hero = Hero()
-        # monsters, weapons, etc.
+        self.hero = Hero(self)
+        self.monster = Monster(self)
+        self.Item = Item(self)
 
     def run_game(self):
         while True:
@@ -45,3 +47,25 @@ class Game:
 #    enemy = spawner.create_monster()
 #    action = monster.attack()
 #    print(action)
+
+    def _spawn_items(self):
+        item = Item()
+# item_spawning = {
+#    "totem": TotemFactory,
+#    "apple": AppleFactory,
+#    "sword": SwordFactory,
+#    "spell": SpellFactory,
+#    "bow": BowFactory,
+#    "arrows": ArrowsFactory,
+# }
+
+
+# item_type_list = ["totem", "apple", "sword, "spell", "bow", "arrows"]
+
+# for i in range(10):
+#    spawner_type = random.choice(item_type_list)
+
+#    spawner = item_spawner[spawner_type]()
+
+
+#    item = spawner.create_item()
