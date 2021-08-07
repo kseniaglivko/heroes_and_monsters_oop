@@ -4,16 +4,17 @@
 
 
 class GameStats:
-    def __init__(self):
+
+    def __init__(self, game):
         self.reset_stats()
 
-        # Начинаем игру в неактивном состоянии.
+        # Начинаем игру в неактивном состоянии. Активизируем при находке тотема.
         self.game_active = False
 
         # Пишем игровую статистику.
         with open("game_process_info.txt", "r+") as file:
             pass
-            # hero_hp, monsters_killed, hero_power, hero_items = file.read()
+            # hero_hp, monsters_killed, hero_power, inventory = file.read()
             # if {...} == "":
             #   {...} == 0
 
@@ -27,4 +28,7 @@ class GameStats:
         # ...
 
     def hero_attack_power(self, power):
+        pass
+
+    def fill_inventory(self, item):
         pass
