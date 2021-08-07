@@ -4,11 +4,10 @@
 
 
 class GameStats:
-
     def __init__(self, game):
         self.reset_stats()
 
-        # Начинаем игру в неактивном состоянии. Активизируем при находке тотема.
+        # Начинаем игру в неактивном состоянии.
         self.game_active = False
 
         # Пишем игровую статистику.
@@ -31,4 +30,7 @@ class GameStats:
         pass
 
     def fill_inventory(self, item):
+        pass
+
+    def monster_counter(self):
         pass

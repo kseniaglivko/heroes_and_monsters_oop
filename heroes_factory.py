@@ -3,17 +3,19 @@
 """
 
 from abc import ABC, abstractmethod
+from time import sleep
 from game_stats import GameStats
 
 
 class Hero(ABC):
     """Абстрактный класс героя."""
 
-    def __init__(self, game, power, item):
+    def __init__(self, game, hp, power, item):
         super().__init__()
         self.game = game
-        self.take_item = item
-        self.attack_power = power
+        self.hp = hp
+        self.item = item
+        self.power = power
 
     @abstractmethod
     def attack(self, power):
@@ -21,7 +23,9 @@ class Hero(ABC):
         return f"Вы атаковали чудовище! Урон чудовищу составил {power}."
 
     def run(self):
-        return "Вы успешно сбежали от чудовища! Отдыхаем и продолжаем путь..."
+        sleep(2)
+        print("Вы успешно сбежали от чудовища! Отдыхаем и продолжаем путь...")
+        self.game.run_game()
 
     def take_item(self):
         # inventory.add[...]/GameStats.fill_inventory()

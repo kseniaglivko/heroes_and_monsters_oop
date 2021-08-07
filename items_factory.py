@@ -4,6 +4,7 @@
 
 from abc import ABC, abstractmethod
 import random
+from time import sleep
 from game_stats import GameStats
 
 
@@ -14,14 +15,32 @@ class Item(ABC):
         super().__init__()
         self.game = game
         self.item_power = power
-        self.quantity = quantity
         self.game = game.game_stats
 
     @abstractmethod
     def spawn(self, power, quantity):
         quantity = 1
-        # В дальнейшем планируется выводить информацию о оставшемся здоровье у противника.
-        return f"Перед вами появился игровой объект!}."
+        print(f"Перед вами появился игровой объект!")
+        self.gamer_reaction_to_item(power)
+
+    def gamer_reaction_to_item(self, power):
+        reaction = input(
+            "Введите 1, чтобы взять новый игровой объект и выкинуть старый, 2 - чтобы пройти мимо: "
+        )
+        if reaction == "1":
+            self.be_taken()
+            print(
+                f"Теперь у вас новый игровой объект! Сила вашей атаки - {power}! Двигаемся дальше..."
+            )
+            sleep(1.5)
+            self.game.run_game()
+        elif reaction == "2":
+            print("Вы прошли мимо игрового объекта. Ну и ладно! Идем дальше...")
+            sleep(1.5)
+            self.game.run_game()
+        else:
+            print("Некорректный ввод!")
+            self.gamer_reaction_to_item(power)
 
     def be_taken(self):
         GameStats.game_active = True
@@ -35,7 +54,6 @@ class Totem(Item):
         power = None
         GameStats.game_active = True
         return f"Вы обнаружили волшебный тотем! Вселенная запомнила это мгновение, и вы сможете сюда вернуться!"
-
 
 
 class Apple(Item):
