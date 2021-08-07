@@ -16,11 +16,43 @@ class Hero(ABC):
         self.hp = hp
         self.item = item
         self.power = power
+        self.game_stats = GameStats()
 
     @abstractmethod
     def attack(self, power):
-        # В дальнейшем планируется выводить информацию о оставшемся здоровье у противника.
-        return f"Вы атаковали чудовище! Урон чудовищу составил {power}."
+        def gamer_reaction_to_monster(self):
+            """Функция, с помощью которой непосредственно реализуется бой с монстром."""
+            reaction = input(
+                "Начинается бой! Введите 1, чтобы атаковать чудовище, 2 - чтобы убежать: "
+            )
+            if reaction == "1":
+                print("Атака!")
+                sleep(0.5)
+                updated_hp = self.game_stats.hero_hp - self.monster_power
+                updated_monster_hp = self.monster_hp - self.game_stats.hero_power
+                if updated_hp <= 0:
+                    print("ПОРАЖЕНИЕ! Вы умерли :(")
+                    exit()
+                elif updated_monster_hp <= 0:
+                    print(
+                        "Вы победили чудовище! Отдохнув и восстановив силы, вы идете дальше..."
+                    )
+                    self.game_stats.monster_counter += 1
+                    print(
+                        f"Количество побежденных чудовищ: {self.game_stats.monster_counter}. Вы молодец!"
+                    )
+                    sleep(2)
+                    self.game.run_game()
+                else:
+                    print(
+                        f"Количество ваших жизней: {updated_hp}, количество жизней чудовища: {updated_monster_hp}."
+                    )
+                    self.gamer_reaction_to_monster(hp, monster_hp, monster_attack)
+            elif reaction == "2":
+                self.hero.run()
+            else:
+                print("Некорректный ввод!")
+                self.gamer_reaction_to_monster(monster_hp, monster_attack)
 
     def run(self):
         sleep(2)

@@ -38,7 +38,7 @@ class Game:
         self.run_game()
 
     def run_game(self):
-        if self.game_stats.monsters_counter() >= 10:
+        if self.game_stats.get_monster_counter() >= 10:
             print("Вы спасли королевство от чудовищ и победили! Поздравляем!")
             exit()
         else:

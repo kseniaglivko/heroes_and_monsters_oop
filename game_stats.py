@@ -2,6 +2,11 @@
 Модуль, собирающий статистику о процессе игры. С помощью него будет реализовано сохранение игры.
 """
 
+import os
+import json
+from utils import getter, setter
+from statisctics_schema import statistics_schema
+
 
 class GameStats:
     def __init__(self, game):
@@ -10,15 +15,6 @@ class GameStats:
         # Начинаем игру в неактивном состоянии.
         self.game_active = False
 
-        # Пишем игровую статистику.
-        with open("game_process_info.txt", "r+") as file:
-            pass
-            # hero_hp, monsters_killed, hero_power, inventory = file.read()
-            # if {...} == "":
-            #   {...} == 0
-
-        # self.{...} = int{...}
-
     def reset_stats(self):
         pass
         # self.{...} = self.{...}.self{...}
@@ -26,11 +22,42 @@ class GameStats:
         # self.hero_hp = {...}
         # ...
 
-    def hero_attack_power(self, power):
+    @getter
+    def get_hero_power(self):
         pass
 
+    @getter
+    def get_hero_hp(self):
+        pass
+
+    @getter
+    def get_monster_hp(self):
+        pass
+
+    @getter
+    def get_monster_power(self):
+        pass
+
+    @setter
+    def update_hero_hp(self):
+        pass
+
+    @setter
+    def update_hero_power(self):
+        pass
+
+    @setter
+    def update_monster_hp(self):
+        pass
+
+    @setter
     def fill_inventory(self, item):
         pass
 
-    def monster_counter(self):
+    @getter
+    def get_monster_counter(self):
+        pass
+
+    @setter
+    def update_monster_counter(self):
         pass
