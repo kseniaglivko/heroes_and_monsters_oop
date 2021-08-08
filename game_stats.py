@@ -4,8 +4,6 @@
 
 import os
 import json
-from utils import getter, setter
-from statisctics_schema import statistics_schema
 
 
 class GameStats:
@@ -22,42 +20,25 @@ class GameStats:
         # self.hero_hp = {...}
         # ...
 
-    @getter
-    def get_hero_power(self):
-        pass
+    def get_game_stats(self, from_, what = None):
+        with open("game_process_info.json", "r") as file:
+            try:
+                game_info = json.load(file)
+                return game_info[from_][what]
+            except json.decoder.JSONDecodeError:
+                os.remove("game_process_info.json")
+                raise Exception(
+                    "Ошибка инициализации игровой статистики. Пожалуйста, начните игру заново."
+                )
 
-    @getter
-    def get_hero_hp(self):
-        pass
-
-    @getter
-    def get_monster_hp(self):
-        pass
-
-    @getter
-    def get_monster_power(self):
-        pass
-
-    @setter
-    def update_hero_hp(self):
-        pass
-
-    @setter
-    def update_hero_power(self):
-        pass
-
-    @setter
-    def update_monster_hp(self):
-        pass
-
-    @setter
-    def fill_inventory(self, item):
-        pass
-
-    @getter
-    def get_monster_counter(self):
-        pass
-
-    @setter
-    def update_monster_counter(self):
-        pass
+    def update_game_stats(self, from_, value, what = None):
+        file = open("game_process_info.json", "a+")
+        try:
+            game_info = json.load(file)
+            game_info[from_][what] = value
+            return json.dump(game_info, file)
+        except json.decoder.JSONDecodeError:
+            os.remove("game_process_info.json")
+            raise Exception(
+                "Ошибка инициализации игровой статистики. Пожалуйста, начните игру заново."
+            )

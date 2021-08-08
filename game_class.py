@@ -3,6 +3,7 @@
 Класс запускает и контролирует игровой процесс, а также собирает игровую статистику.
 """
 
+import random
 from game_stats import GameStats
 from heroes_factory import Hero
 from monsters_factory import Monster, WizardFactory, SkeletonFactory, GoblinFactory
@@ -15,7 +16,6 @@ from items_factory import (
     BowFactory,
     ArrowsFactory,
 )
-import random
 
 
 class Game:
@@ -38,7 +38,7 @@ class Game:
         self.run_game()
 
     def run_game(self):
-        if self.game_stats.get_monster_counter() >= 10:
+        if self.game_stats.get_game_stats("monster_counter") >= 10:
             print("Вы спасли королевство от чудовищ и победили! Поздравляем!")
             exit()
         else:
