@@ -24,7 +24,6 @@ def get_game_stats(from_, what=None):
             game_info = json.load(file)
             return game_info[from_][what]
         except json.decoder.JSONDecodeError:
-            os.remove("game_process_info.json")
             raise Exception(
                 "Ошибка инициализации игровой статистики. Пожалуйста, начните игру заново."
             )
@@ -38,7 +37,6 @@ def update_game_stats(from_, value, what=None):
         game_info[from_][what] = value
         return json.dump(game_info, file)
     except json.decoder.JSONDecodeError:
-        os.remove("game_process_info.json")
         raise Exception(
             "Ошибка инициализации игровой статистики. Пожалуйста, начните игру заново."
         )
