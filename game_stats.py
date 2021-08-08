@@ -60,4 +60,4 @@ def choose_hero():
     except jsonschema.exceptions.ValidationError:
         print("Пожалуйста, выберите один из предложенные классов.")
         choose_hero()
-    update_game_stats("hero", "type", hero_input)
+    update_game_stats("hero", hero_input, "type")
