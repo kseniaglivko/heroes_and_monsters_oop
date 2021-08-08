@@ -4,6 +4,7 @@
 
 from abc import ABC, abstractmethod
 from time import sleep
+import random
 from game_stats import GameStats
 from game_class import Game
 from heroes_factory import Hero
@@ -12,7 +13,7 @@ from heroes_factory import Hero
 class Monster(ABC):
     """Абстрактный класс чудовищ."""
 
-    def __init__(self, game, hp, power):
+    def __init__(self, game):
         super().__init__()
         self.game = game
         self.monster_hp = hp
@@ -20,9 +21,18 @@ class Monster(ABC):
         self.game_stats = GameStats(self.game)
 
     @abstractmethod
-    def spawn(self, power):
-        print(f"Перед вами появилось чудовище!")
-        self.gamer_reaction_to_monster()
+    def spawn(self):
+        monster_spawner = {
+            "evil_wizard": WizardFactory,
+            "skeleton_archer": SkeletonFactory,
+            "swordsman_goblin": GoblinFactory,
+        }
+
+        monsters_type_list = ["evil_wizard", "skeleton_archer", "swordsman_goblin"]
+        spawner_type = random.choice(monsters_type_list)
+        spawner = monster_spawner[spawner_type]()
+        monster = spawner.create_monster()
+        monster.spawn()
 
     @abstractmethod
     def attack(self, power):
