@@ -19,6 +19,6 @@ statistics_schema = {
             "power": {"type": "int"},
             "hp": {"type": "int"},
         },
-        "inventory": {"type": "array"},
+        "inventory": {"type": "object"},
     },
 }

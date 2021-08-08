@@ -43,7 +43,6 @@ class Item(ABC):
             self.gamer_reaction_to_item(power)
 
     def be_taken(self):
-        GameStats.game_active = True
         GameStats.fill_inventory(self)
 
 
