@@ -6,6 +6,8 @@ statistics_schema = {
     "description": "В схеме содержится информация о состоянии игрового процесса.",
     "properties": {
         "monster_counter": {"value": "int"},
+        "apple": {"power": "int"},
+        "totem": {"quantity": "int"},
         "hero": {
             "type": {"type": "string", "enum": ["Маг", "Мечник", "Лучник"]},
             "power": {"type": "int"},
