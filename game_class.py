@@ -8,16 +8,18 @@ from game_stats import GameStats
 from heroes_factory import Hero
 from monsters_factory import Monster
 from items_factory import Item
+from typing import Any
 
 
 class Game:
-    def __init__(self):
+    def __init__(self) -> None:
         self.game_stats = GameStats(self)
         self.hero = Hero(self)
         self.monster = Monster(self)
         self.item = Item(self)
 
-    def game_launch(self):
+    def game_launch(self) -> Any:
+        """Функция, реализующая запуск игры."""
         print(
             "Добро пожаловать в игру 'Герой и Чудовища 2: Волшебный тотем'!"
             "\nВам предстоит спасти королевство от нападения 10 чудовищ."
@@ -27,7 +29,8 @@ class Game:
         self.game_stats.choose_hero(self)
         self.run_game()
 
-    def run_game(self):
+    def run_game(self) -> Any:
+        """Функция, реализующая игровой процесс."""
         if self.game_stats.get_game_stats("monster_counter") >= 10:
             print("Вы спасли королевство от чудовищ и победили! Поздравляем!")
             self.game_stats.reset_stats()

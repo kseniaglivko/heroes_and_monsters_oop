@@ -5,6 +5,7 @@
 import json
 import jsonschema
 from statistics_schema import statistics_schema
+from typing import Any
 
 
 # Дефолтные параметры игровой статистики. С ними начинаем игру.
@@ -21,17 +22,17 @@ default_parameters = {
 
 
 class GameStats:
-    def __init__(self, game):
+    def __init__(self, game: Any) -> None:
         self.game = game
 
     @staticmethod
-    def reset_stats():
+    def reset_stats() -> None:
         """Функция, обнуляющая игровую статистику."""
         with open("game_process_info.json", "w") as file:
             json.dump(default_parameters, file)
 
     @staticmethod
-    def get_game_stats(from_, what=None):
+    def get_game_stats(from_: str, what: str = None) -> None:
         """Функция, выводящая игровую статистику."""
         with open("game_process_info.json", "r") as file:
             try:
@@ -43,7 +44,7 @@ class GameStats:
                 )
 
     @staticmethod
-    def update_game_stats(from_, value, what=None):
+    def update_game_stats(from_: str, value: Any, what: str = None) -> None:
         """Функция, обновляющая игровую статистику."""
         file = open("game_process_info.json", "w+")
         try:
@@ -56,13 +57,13 @@ class GameStats:
             )
 
     @staticmethod
-    def save_game():
+    def save_game() -> None:
         """Функция,сохраняющая игру."""
         with open("game_process_info.json", "r") as from_:
             with open("saved_game.json", "w+") as to:
                 to.write(from_.read())
 
-    def load_game(self):
+    def load_game(self) -> None:
         """Функция, загружающая сохраненную игру."""
         with open("saved_game.json", "r") as from_:
             with open("game_process_info.json", "w+") as to:
@@ -70,8 +71,8 @@ class GameStats:
                 self.update_game_stats("totem", 0)
                 self.game.run_game()
 
-    @staticmethod
-    def choose_hero(self):
+    def choose_hero(self) -> None:
+        """Функция, реализующая выбор персонажа."""
         hero_input = input(
             "Пожалуйста, выберите класс для вашего героя - Маг, Мечник или Лучник): "
         ).capitalize()
