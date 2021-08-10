@@ -10,11 +10,13 @@ from statistics_schema import statistics_schema
 # Дефолтные параметры игровой статистики. С ними начинаем игру.
 default_parameters = {
     "monster_counter": 0,
-    "apple": 0,
     "totem": 0,
+    "arrows": {"name": "колчан со стрелами", "quantity": 0, "power": 0},
+    "bow": {"name": "лук", "quantity": 0},
+    "sword": {"name": "меч", "quantity": 1, "power": 10},
+    "spell": {"type": "", "quantity": 0, "power": 0},
     "hero": {"type": "", "power": 10, "hp": 15},
     "monster": {"type": "", "power": "", "hp": ""},
-    "inventory": "[{'Меч': 10}]",
 }
 
 
@@ -65,6 +67,7 @@ class GameStats:
         with open("saved_game.json", "r") as from_:
             with open("game_process_info.json", "w+") as to:
                 to.write(from_.read())
+                self.update_game_stats("totem", 0)
                 self.game.run_game()
 
     @staticmethod

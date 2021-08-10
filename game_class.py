@@ -14,7 +14,7 @@ class Game:
     def __init__(self):
         self.game_stats = GameStats(self)
         self.hero = Hero(self)
-        self.monster = Monster()
+        self.monster = Monster(self)
         self.item = Item(self)
 
     def game_launch(self):

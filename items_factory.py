@@ -5,8 +5,6 @@
 from abc import ABC, abstractmethod
 import random
 from time import sleep
-from game_stats import GameStats
-from heroes_factory import Hero
 
 
 class Item(ABC):
@@ -15,8 +13,6 @@ class Item(ABC):
     def __init__(self, game):
         super().__init__()
         self.game = game
-        self.game_stats = GameStats(self.game)
-        self.hero = Hero(self.game)
 
     @abstractmethod
     def spawn(self):
@@ -30,68 +26,111 @@ class Item(ABC):
         }
         item_type_list = ["totem", "apple", "sword", "spell", "bow", "arrows"]
         spawner_type = random.choice(item_type_list)
-        spawner = item_spawner[spawner_type]()
+        spawner = item_spawner[spawner_type](self.game)
         item = spawner.create_item()
-        item.spawn(self)
+        item.spawn()
 
 
 class Totem(Item):
     """Класс тотема."""
 
+    def __init__(self, game):
+        self.game = game
+        super().__init__(self.game)
+        self.game_stats = self.game.game_stats
+
     def spawn(self):
-        power = None
-        GameStats.game_active = True
-        return f"Вы обнаружили волшебный тотем! Вселенная запомнила это мгновение, и вы сможете сюда вернуться!"
-        self.hero.reaction_to_item()
+        print(
+            "Вы обнаружили волшебный тотем! Вселенная запомнила это мгновение, и вы сможете вернутся сюда!"
+        )
+
+    def totem_taken(self):
+        self.game_stats.update_game_stats("totem", 1)
+        self.game_stats.save_game()
+        sleep(1)
+
 
 class Apple(Item):
     """Класс целебного яблочка."""
 
+    def __init__(self, game, apple_hp):
+        self.game = game
+        super().__init__(self.game)
+        self.game_stats = self.game.game_stats
+        self.apple_hp = apple_hp
+
     def spawn(self):
-        return f"Вы нашли целебное яблоко! Съев его, вы восстановили {power} единиц здоровья."
-        self.hero.reaction_to_item()
+        print(
+            f"Вы нашли целебное яблоко! Съев его, вы восстановили {self.apple_hp} единиц здоровья."
+        )
+        hp = self.game_stats.get_game_stats("hero", "hp")
+        updated_hp = hp + self.apple_hp
+        self.game_stats.update_game_stats("hero", updated_hp, "hp")
+        sleep(1)
+
 
 class Sword(Item):
     """Класс меча."""
 
+    def __init__(self, game, power):
+        self.game = game
+        super().__init__(self.game)
+        self.game_stats = self.game.game_stats
+        self.power = power
+
     def spawn(self):
-        return f"Вы нашли новый меч! Его мощь составляет {power} единиц."
-        self.hero.reaction_to_item()
+        print(f"Вы нашли новый меч! Его мощь составляет {self.power} единиц.")
+
 
 class Spell(Item):
     """Класс заклинания."""
 
+    def __init__(self, game, spell_type, power):
+        self.game = game
+        super().__init__(self.game)
+        self.game_stats = self.game.game_stats
+        self.spell_type = spell_type
+        self.power = power
+
     def spawn(self):
-        spell_types = [
-            "Вы нашли свиток с заклинанием школы магии огня 'Огненный шар'",
-            "Вы нашли свиток с заклинанием школы магии воды 'Ледяная стрела'",
-            "Вы нашли свиток с заклинанием школы магии земли 'Землетрясение'",
-            "Вы нашли свиток с заклинанием школы магии воздуха 'Молния'",
-            "Вы нашли свиток с заклинанием школы магии огня 'Огненный элементаль'",
-            "Вы нашли свиток с заклинанием школы магии воды 'Водный элементаль'",
-            "Вы нашли свиток с заклинанием школы магии земли 'Земляной элементаль'",
-            "Вы нашли свиток с заклинанием школы магии воздуха 'Воздушный элементаль'",
-        ]
-        return f"{random.choice(spell_types)}! Вы наносите чудовищу урон в размере {power} единиц."
+        print(
+            f"Вы нашли свиток, это {self.spell_type}! Его мощь составляет{self.power}."
+        )
 
 
 class Bow(Item):
     """Класс лука."""
 
+    def __init__(self, game):
+        self.game = game
+        super().__init__(self.game)
+
     def spawn(self):
-        return f"Вы новый лук! Его мощь составляет {power} единиц."
-        self.hero.reaction_to_item()
+        print("Вы нашли новый лук!")
+
 
 class Arrows(Item):
     """Класс стрел."""
 
+    def __init__(self, game, quantity, power):
+        self.game = game
+        super().__init__(self.game)
+        self.quantity = quantity
+        self.power = power
+
     def spawn(self):
-        quantity = random.randint(1, 10)
-        return f"Вы нашли колчан со стрелами! Количество стрел в колчане: {quantity}."
-        self.hero.reaction_to_item()
+        print(
+            f"Вы нашли колчан со стрелами! Количество стрел в колчане: {self.quantity}, "
+            f"а мощь одной стрелы составляет {self.power}."
+        )
+
 
 class ItemFactory(ABC):
     """Абстрактная фабрика игровых предметов."""
+
+    def __init__(self, game):
+        self.game = game
+        super().__init__(self.game)
 
     @abstractmethod
     def create_item(self):
@@ -101,40 +140,72 @@ class ItemFactory(ABC):
 class TotemFactory(ItemFactory):
     """Фабрика по производству тотемов."""
 
+    def __init__(self, game):
+        self.game = game
+        super().__init__(self.game)
+
     def create_item(self):
-        return Totem()
+        return Totem(self.game)
 
 
 class AppleFactory(ItemFactory):
     """Фабрика по производству целебных яблочек."""
 
+    def __init__(self, game):
+        self.game = game
+        super().__init__(self.game)
+
     def create_item(self):
-        return Apple()
+        apple_hp = random.randint(2, 4)
+        return Apple(self.game, apple_hp)
 
 
 class SwordFactory(ItemFactory):
     """Фабрика по производству мечей."""
 
+    def __init__(self, game):
+        self.game = game
+        super().__init__(self.game)
+
     def create_item(self):
-        return Sword()
+        power = random.randint(4, 20)
+        return Sword(self.game, power)
 
 
 class SpellFactory(ItemFactory):
     """Фабрика по производству заклинаний."""
 
+    def __init__(self, game):
+        self.game = game
+        super().__init__(self.game)
+        self.game_stats = self.game.game_stats
+
     def create_item(self):
-        return Spell()
+        spells = self.game_stats.get_game_stats("spell", "type")
+        power = random.randint(6, 25)
+        spell_type = random.choice(spells)
+        return Spell(self.game, spell_type, power)
 
 
 class BowFactory(ItemFactory):
     """Фабрика по производству луков."""
 
+    def __init__(self, game):
+        self.game = game
+        super().__init__(self.game)
+
     def create_item(self):
-        return Bow()
+        return Bow(self.game)
 
 
 class ArrowsFactory(ItemFactory):
     """Фабрика по производству стрел."""
 
+    def __init__(self, game):
+        self.game = game
+        super().__init__(self.game)
+
     def create_item(self):
-        return Arrows()
+        quantity = random.randint(1, 10)
+        power = random.randint(5, 12)
+        return Arrows(self.game, quantity, power)
