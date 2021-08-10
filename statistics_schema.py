@@ -8,6 +8,10 @@ statistics_schema = {
         "monster_counter": {"value": "int"},
         "apple": {"power": "int"},
         "totem": {"quantity": "int"},
+        "arrows": {
+            "quantity": "int",
+            "power": "int"
+        },
         "hero": {
             "type": {"type": "string", "enum": ["Маг", "Мечник", "Лучник"]},
             "power": {"type": "int"},
