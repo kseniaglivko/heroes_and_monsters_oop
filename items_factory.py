@@ -30,6 +30,10 @@ class Item(ABC):
         item = spawner.create_item()
         item.spawn()
 
+    @abstractmethod
+    def be_taken(self):
+        pass
+
 
 class Totem(Item):
     """Класс тотема."""
@@ -41,10 +45,13 @@ class Totem(Item):
 
     def spawn(self):
         print(
-            "Вы обнаружили волшебный тотем! Вселенная запомнила это мгновение, и вы сможете вернутся сюда!"
+            "Вы обнаружили волшебный тотем! С его помощью вы сможете сохраниться на настоящем моменте."
         )
 
-    def totem_taken(self):
+    def be_taken(self):
+        print(
+            "Вы подобрали волшебный тотем! Вселенная запомнила это мгновение, и вы сможете вернутся сюда!"
+        )
         self.game_stats.update_game_stats("totem", 1)
         self.game_stats.save_game()
         sleep(1)
@@ -68,6 +75,9 @@ class Apple(Item):
         self.game_stats.update_game_stats("hero", updated_hp, "hp")
         sleep(1)
 
+    def be_taken(self):
+        pass
+
 
 class Sword(Item):
     """Класс меча."""
@@ -80,6 +90,12 @@ class Sword(Item):
 
     def spawn(self):
         print(f"Вы нашли новый меч! Его мощь составляет {self.power} единиц.")
+
+    def be_taken(self):
+        print("Поздравляем, теперь у вас новый меч!")
+        self.game_stats.update_game_stats("sword", 1, "quantity")
+        self.game_stats.update_game_stats("sword", {self.power}, "power")
+        sleep(1)
 
 
 class Spell(Item):
@@ -97,6 +113,13 @@ class Spell(Item):
             f"Вы нашли свиток, это {self.spell_type}! Его мощь составляет{self.power}."
         )
 
+    def be_taken(self):
+        print("Поздравляем, теперь вы знаете новое заклинание!")
+        self.game_stats.update_game_stats("spell", {self.spell_type}, "type")
+        self.game_stats.update_game_stats("spell", 1, "quantity")
+        self.game_stats.update_game_stats("spell", {self.power}, "power")
+        sleep(1)
+
 
 class Bow(Item):
     """Класс лука."""
@@ -104,9 +127,15 @@ class Bow(Item):
     def __init__(self, game):
         self.game = game
         super().__init__(self.game)
+        self.game_stats = self.game.game_stats
 
     def spawn(self):
         print("Вы нашли новый лук!")
+
+    def be_taken(self):
+        print("Поздравляем, теперь у вас новый лук!")
+        self.game_stats.update_game_stats("bow", 1, "quantity")
+        sleep(1)
 
 
 class Arrows(Item):
@@ -117,12 +146,23 @@ class Arrows(Item):
         super().__init__(self.game)
         self.quantity = quantity
         self.power = power
+        self.game_stats = self.game.game_stats
 
     def spawn(self):
         print(
             f"Вы нашли колчан со стрелами! Количество стрел в колчане: {self.quantity}, "
             f"а мощь одной стрелы составляет {self.power}."
         )
+
+    def be_taken(self):
+        quantity = self.game_stats.get_game_stats("arrows", "quantity")
+        power = self.game_stats.get_game_stats("arrows", "power")
+        new_quantity = quantity + self.quantity
+        new_power = (power + self.power) / 2
+        print(f"Поздравляем, теперь количество ваших стрел: {self.quantity}!")
+        self.game_stats.update_game_stats("arrows", {new_quantity}, "quantity")
+        self.game_stats.update_game_stats("sword", {new_power}, "power")
+        sleep(1)
 
 
 class ItemFactory(ABC):

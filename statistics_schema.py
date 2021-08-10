@@ -8,16 +8,11 @@ statistics_schema = {
         "monster_counter": "int",
         "totem": "int",
         "arrows": {
-            "name": ["колчан со стрелами"],
             "quantity": "int",
             "power": "int"
         },
-        "bow": {
-            "name": ["лук"],
-            "quantity": "int",
-        },
+        "bow": {"quantity": "int"},
         "sword": {
-            "name": ["меч"],
             "quantity": "int",
             "power": "int"
         },
@@ -36,12 +31,11 @@ statistics_schema = {
             "power": "int"
         },
         "hero": {
-            "type": {"type": "string", "enum": ["Маг", "Мечник", "Лучник"]},
+            "type": ["Маг", "Мечник", "Лучник"],
             "power": {"type": "int"},
             "hp": {"type": "int"},
         },
         "monster": {
-            "type": ["злой колдун", "скелет-лучник", "гоблин-мечник"],
             "power": {"type": "int"},
             "hp": {"type": "int"},
         },

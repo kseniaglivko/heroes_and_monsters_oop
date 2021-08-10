@@ -11,12 +11,12 @@ from statistics_schema import statistics_schema
 default_parameters = {
     "monster_counter": 0,
     "totem": 0,
-    "arrows": {"name": "колчан со стрелами", "quantity": 0, "power": 0},
-    "bow": {"name": "лук", "quantity": 0},
-    "sword": {"name": "меч", "quantity": 1, "power": 10},
+    "arrows": {"quantity": 0, "power": 0},
+    "bow": 0,
+    "sword": {"quantity": 1, "power": 10},
     "spell": {"type": "", "quantity": 0, "power": 0},
     "hero": {"type": "", "power": 10, "hp": 15},
-    "monster": {"type": "", "power": "", "hp": ""},
+    "monster": {"power": "", "hp": ""},
 }
 
 
