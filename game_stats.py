@@ -3,18 +3,6 @@
 import json
 from typing import Any
 
-# Дефолтные параметры игровой статистики. С ними начинаем игру.
-default_parameters = {
-    "monster_counter": 0,
-    "totem": 0,
-    "arrows": {"quantity": 0, "power": 0},
-    "bow": 0,
-    "sword": {"quantity": 1, "power": 10},
-    "spell": {"type": "", "quantity": 0, "power": 0},
-    "hero": {"type": "", "power": 10, "hp": 15},
-    "monster": {"power": "", "hp": ""},
-}
-
 
 class GameStats:
     """Класс игровой статистики."""
@@ -22,100 +10,118 @@ class GameStats:
     def __init__(self, game: Any) -> None:
         """Инициализация класса."""
         self.game = game
+        self.monster_counter = 0
+        self.totem = 0
+        self.arrows_quantity = 0
+        self.arrows_power = 0
+        self.bow = 0
+        self.sword_quantity = 1
+        self.sword_power = 10
+        self.spell_type = ""
+        self.spell_quantity = 0
+        self.spell_power = 0
+        self.hero_type = ""
+        self.hero_power = 10
+        self.hero_hp = 15
+        self.item_type = ""
+        self.monster_type = ""
+        self.monster_power = 0
+        self.monster_hp = 0
 
-    @staticmethod
-    def reset_stats() -> None:
+    def reset_stats(self) -> None:
         """Функция, обнуляющая игровую статистику."""
-        with open("game_process_info.json", "w") as file:
-            json.dumps(default_parameters)
+        self.monster_counter = 0
+        self.totem = 0
+        self.arrows_quantity = 0
+        self.arrows_power = 0
+        self.bow = 0
+        self.sword_quantity = 1
+        self.sword_power = 10
+        self.spell_type = ""
+        self.spell_quantity = 0
+        self.spell_power = 0
+        self.hero_type = ""
+        self.hero_power = 10
+        self.hero_hp = 15
+        self.item_type = ""
+        self.monster_type = ""
+        self.monster_power = 0
+        self.monster_hp = 0
 
-    @staticmethod
-    def get_game_stats(from_: str, what: str = None) -> str:
-        """Функция, выводящая игровую статистику."""
-        with open("game_process_info.json", "r") as file:
-            try:
-                game_info = json.load(file)
-                return game_info[from_][what]
-            except json.decoder.JSONDecodeError:
-                raise Exception(
-                    "Ошибка инициализации игровой статистики. Пожалуйста, начните игру заново."
-                )
-
-    @staticmethod
-    def update_game_stats(from_: str, value: Any, what: str = None) -> None:
-        """Функция, обновляющая игровую статистику."""
-        with open("game_process_info.json", "r") as file:
-            try:
-                game_info = json.load(file)
-                game_info[from_][what] = value
-                with open("game_process_info.json", "w") as f:
-                    json.dump(game_info, f)
-            except json.decoder.JSONDecodeError:
-                raise Exception(
-                    "Ошибка инициализации игровой статистики. Пожалуйста, начните игру заново."
-                )
-
-    @staticmethod
-    def save_game() -> None:
-        """Функция,сохраняющая игру."""
-        with open("game_process_info.json", "r") as from_:
-            with open("saved_game.json", "w+") as to:
-                to.write(from_.read())
+    def save_game(self) -> None:
+        """Функция, сохраняющая игру."""
+        self.save_monster_counter = self.monster_counter
+        self.save_arrows_quantity = self.arrows_quantity
+        self.save_arrows_power = self.arrows_power
+        self.save_bow = self.bow
+        self.save_sword_power = self.sword_power
+        self.save_spell_type = self.spell_type
+        self.save_spell_quantity = self.spell_quantity
+        self.save_spell_power = self.spell_power
+        self.save_hero_type = self.hero_type
+        self.save_hero_power = self.hero_power
+        self.save_hero_hp = self.hero_hp
 
     def load_game(self) -> None:
         """Функция, загружающая сохраненную игру."""
-        with open("saved_game.json", "r") as from_:
-            with open("game_process_info.json", "w+") as to:
-                to.write(from_.read())
-                self.update_game_stats("totem", 0)
-                self.game.run_game()
+        self.monster_counter = self.save_monster_counter
+        self.totem = 0
+        self.arrows_quantity = self.save_arrows_quantity
+        self.arrows_power = self.save_arrows_power
+        self.bow = self.save_bow
+        self.sword_quantity = 1
+        self.sword_power = self.save_sword_power
+        self.spell_type = self.save_spell_type
+        self.spell_quantity = self.save_spell_quantity
+        self.spell_power = self.save_spell_power
+        self.hero_type = self.save_hero_type
+        self.hero_power = self.save_hero_power
+        self.hero_hp = self.save_hero_hp
+        self.item_type = ""
+        self.monster_type = ""
+        self.monster_power = 0
+        self.monster_hp = 0
+        self.game.run_game()
 
     def choose_hero(self) -> None:
         """Функция, реализующая выбор персонажа."""
-        hero_input = (input(
-            "Пожалуйста, выберите класс для вашего героя - Маг, Мечник или Лучник): "
-        )).lower()
-        if hero_input == "маг":
-            self.update_game_stats("hero", "маг", "type")
-        if hero_input == "мечник":
-            self.update_game_stats("hero", "мечник", "type")
-        if hero_input == "лучник":
-            self.update_game_stats("hero", "лучник", "type")
+        print("Пожалуйста, выберите класс для вашего героя: 1 - Маг, 2 - Мечник, 3 - Лучник. Введите 1, 2 или 3.")
+        hero_input = input()
+        if hero_input == "1":
+            self.hero_type = "маг"
+        elif hero_input == "2":
+            self.hero_type = "мечник"
+        elif hero_input == "3":
+            self.hero_type = "лучник"
         else:
             print("Пожалуйста, выберите один из предложенных классов.")
             self.choose_hero()
+        self.game.run_game()
 
     def check_hero_type(self) -> Any:
         """Проверка типа героя и начисление ему бонусов к атаке в зависимости от типа найденного оружия."""
-        hero_type = self.get_game_stats("hero", "type")
-        if hero_type == "мечник":
-            if self.game.spawner_type == "sword":
+        if self.hero_type == "мечник":
+            if self.item_type == "меч":
                 print(
                     "Ура! Поскольку вы - могучий мечник, то бонус к силе вашего меча +3!"
                 )
-                sword_power = int(self.get_game_stats("sword", "power"))
-                updated_power = sword_power + 3
-                self.update_game_stats("sword", updated_power, "hp")
+                self.sword_power += 3
             else:
                 pass
-        if hero_type == "лучник":
-            if self.game.spawner_type == "arrows":
+        if self.hero_type == "лучник":
+            if self.item_type == "стрелы":
                 print(
                     "Ура! Поскольку вы - отменный лучник, то бонус к силе ваших стрел +3!"
                 )
-                arrows_power = int(self.get_game_stats("arrows", "power"))
-                updated_power = arrows_power + 3
-                self.update_game_stats("arrows", updated_power, "hp")
+                self.arrows_power += 3
             else:
                 pass
-        if hero_type == "маг":
-            if self.game.spawner_type == "spell":
+        if self.hero_type == "маг":
+            if self.item_type == "заклинание":
                 print(
                     "Ура! Поскольку вы - великий маг, то бонус к силе вашего заклинания +3!"
                 )
-                spell_power = int(self.get_game_stats("spell", "power"))
-                updated_power = spell_power + 3
-                self.update_game_stats("spell", updated_power, "hp")
+                self.spell_power += 3
             else:
                 pass
         pass

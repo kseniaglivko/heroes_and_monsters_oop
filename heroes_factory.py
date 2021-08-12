@@ -11,58 +11,72 @@ class Hero:
         """Инициализация класса."""
         self.game = game
         self.game_stats = self.game.game_stats
-        self.item = self.game.item
-        self.monster = self.game.monster
+        self.arrows = self.game.arrows
+        self.bow = self.game.bow
+        self.spell = self.game.spell
+        self.totem = self.game.totem
+        self.sword = self.game.sword
 
     def react(self) -> None:
         """Реакция героя на событие."""
-        if self.game.random_function == self.monster.spawn:
-            reaction = input("Нажмите 1, чтобы атаковать, 2 - чтобы убежать.")
-            self.activate_reaction_to_item(int(reaction))
-        if self.game.random_function == self.monster.spawn:
+        if self.game.random_function == self.game.enemy_spawner:
+            reaction = input("Нажмите 1, чтобы атаковать, 2 - чтобы убежать: ")
+            self.activate_reaction_to_monster(reaction)
+        if self.game.random_function == self.game.object_spawner:
+            if self.game_stats.item_type == "яблоко":
+                pass
             reaction = input(
-                "Нажмите 1, чтобы подобрать находку, 2 - чтобы пройти мимо."
+                "Нажмите 1, чтобы подобрать находку, 2 - чтобы пройти мимо: "
             )
-            self.activate_reaction_to_monster(int(reaction))
+            self.activate_reaction_to_item(reaction)
         pass
 
     def reaction_after_death(self) -> None:
         """Выбор действия после смерти героя, у которого есть тотем, - загрузить игру или выйти из игры."""
         reaction = input(
-            "Нажмите 1, чтобы загрузить сохраненную игру, 2 - чтобы выйти из игры."
+            "Нажмите 1, чтобы загрузить сохраненную игру, 2 - чтобы выйти из игры: "
         )
         if reaction == "1":
             self.game_stats.load_game()
-        if reaction == "2":
+        elif reaction == "2":
             print("Пока! Увидимся еще!")
             exit()
         else:
             print("Неверный ввод!")
             self.reaction_after_death()
 
-    def activate_reaction_to_item(self, reaction: int) -> None:
+    def activate_reaction_to_item(self, reaction: str) -> None:
         """Функция, реализующая реакцию героя на игровой предмет."""
         if reaction == "1":
             self.take_item()
-        if reaction == "2":
+        elif reaction == "2":
             self.pass_by()
         else:
             print("Неверный ввод!")
-            self.activate_reaction_to_item(reaction)
+            self.react()
 
-    def activate_reaction_to_monster(self, reaction: int) -> None:
+    def activate_reaction_to_monster(self, reaction: str) -> None:
         """Функция, реализующая реакцию героя на появление чудовища."""
         if reaction == "1":
             self.choose_weapon()
-        if reaction == "2":
+        elif reaction == "2":
             self.run()
         else:
             print("Неверный ввод!")
-            self.activate_reaction_to_monster(reaction)
+            self.react()
 
     def take_item(self) -> None:
         """Взять игровой предмет в инвентарь."""
-        self.item.be_taken()
+        if self.game_stats.item_type == "тотем":
+            self.totem.be_taken()
+        if self.game_stats.item_type == "лук":
+            self.bow.be_taken()
+        if self.game_stats.item_type == "стрелы":
+            self.arrows.be_taken()
+        if self.game_stats.item_type == "меч":
+            self.sword.be_taken()
+        if self.game_stats.item_type == "заклинание":
+            self.spell.be_taken()
 
     def pass_by(self) -> None:
         """Пройти мимо игрового предмета."""
@@ -72,59 +86,66 @@ class Hero:
 
     def choose_weapon(self) -> None:
         """Выбрать оружие для атаки."""
-        print("Выберите оружие для атаки:")
-        bow = int(self.game_stats.get_game_stats("bow"))
-        arrows_quantity = int(self.game_stats.get_game_stats("arrows", "quantity"))
-        arrows_power = int(self.game_stats.get_game_stats("arrows", "power"))
-        sword_power = int(self.game_stats.get_game_stats("sword", "power"))
-        spell_quantity = int(self.game_stats.get_game_stats("spell", "quantity"))
-        spell_power = int(self.game_stats.get_game_stats("spell", "power"))
-        spell_type = self.game_stats.get_game_stats("spell", "type")
-        print("Выберите оружие для атаки. Вот ваш инвентарь:"
-              f"\nМ - меч с силой атаки {sword_power}")
-        if arrows_quantity != 0 and bow == 1:
-            print(f"\nЛ - лук - {bow}."
-                  f"\nстрелы в количестве {arrows_quantity}, мощь - {arrows_power}")
-        if spell_quantity == 1:
-            print(f"З - {spell_type} мощью {spell_power}")
-        choice = input("Введите букву-индикатор оружия (М/Л/З): ").lower()
-        if choice == "м":
+        print(
+            "Выберите оружие для атаки. Вот ваш инвентарь:"
+            f"\nмеч с силой атаки {self.game_stats.sword_power}"
+        )
+        if self.game_stats.arrows_quantity != 0 and self.game_stats.bow != 0:
+            print(
+                f"лук и стрелы в количестве {self.game_stats.arrows_quantity}, "
+                f"мощь - {self.game_stats.arrows_power}"
+            )
+        if self.game_stats.spell_quantity == 1:
+            print(
+                f"{self.game_stats.spell_type} мощью {self.game_stats.spell_power}"
+            )
+        choice = input("1 - меч, 2 - лук и стрелы, 3 - заклинание: ")
+        if choice == "1":
             print("Вы выбрали меч!")
-            sword_power = int(self.game_stats.get_game_stats("sword", "power"))
-            self.game_stats.update_game_stats("hero", sword_power, "power")
-        if choice == "л":
-            print("Вы выбрали лук и стрелы!")
-            arrows_power = int(self.game_stats.get_game_stats("arrows", "power"))
-            self.game_stats.update_game_stats("hero", arrows_power, "power")
-        if choice == "м":
-            print("Вы выбрали магию!")
-            spell_power = int(self.game_stats.get_game_stats("spell", "power"))
-            self.game_stats.update_game_stats("hero", spell_power, "power")
-
+            self.game_stats.hero_power = self.game_stats.sword_power
+        if choice == "2":
+            if self.game_stats.bow != 0 and self.game_stats.arrows_quantity != 0:
+                print("Вы выбрали лук и стрелы!")
+                self.game_stats.hero_power = self.game_stats.arrows_power
+            else:
+                print("У вас нет лука и/или стрел. Выберите другое оружие.")
+                self.choose_weapon()
+        if choice == "3":
+            if self.game_stats.spell_quantity != 0:
+                print("Вы выбрали магию!")
+                self.game_stats.hero_power = self.game_stats.spell_power
+            else:
+                print("Вы не знаете ни одного заклинания. Выберите другое оружие.")
+                self.choose_weapon()
         self.attack()
 
     def attack(self) -> None:
         """Функция, реализующая атаку героя."""
-        power = int(self.game_stats.get_game_stats("hero", "power"))
-        print(f"Вы атакуете противника и напасите ему урон {power}.")
-        self.monster.be_attacked()
+        print(f"Вы атакуете противника и наносите ему урон {self.game_stats.hero_power}.")
+        if self.game_stats.monster_type == "колдун":
+            self.game.wizard.be_attacked()
+        if self.game_stats.monster_type == "гоблин":
+            self.game.goblin.be_attacked()
+        if self.game_stats.monster_type == "скелет":
+            self.game.skeleton.be_attacked()
+        pass
 
     def be_attacked(self) -> None:
         """Функция, реализующая нанесение ущерба герою после атаки монстра."""
-        monster_attack = int(self.game_stats.get_game_stats("monster", "power"))
-        hero_hp = int(self.game_stats.get_game_stats("hero", "hp"))
-        updated_hp = hero_hp - monster_attack
-        self.game_stats.update_game_stats("hero", updated_hp, "hp")
-        if hero_hp <= 0:
-            totem = int(self.game_stats.get_game_stats("totem", "quantity"))
-            if totem == 1:
+        updated_hp = self.game_stats.hero_hp - self.game_stats.monster_power
+        self.game_stats.hero_hp = updated_hp
+        if self.game_stats.hero_hp <= 0:
+            if self.game_stats.totem == 1:
                 print(
                     "Вы погибли, но вас может спасти волшебный тотем! Загрузить сохраненную игру?"
                 )
                 self.reaction_after_death()
+            else:
+                print("Поражение! Вы умерли :(")
+                exit()
         print(
-            f"Вы ранены! Вы потеряли {monster_attack} здоровья."
-            f"Здоровья осталось {updated_hp}. "
+            f"Вы ранены! Вы потеряли {self.game_stats.monster_power} здоровья."
+            f"Здоровья осталось {self.game_stats.hero_hp}. "
         )
         self.choose_weapon()
 

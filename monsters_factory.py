@@ -1,11 +1,12 @@
 """Фабрика по производству чудовищ."""
 
 from time import sleep
+from abc import ABC, abstractmethod
 import random
 from typing import Any
 
 
-class Monster:
+class Monster(ABC):
     """Абстрактный класс чудовищ."""
 
     def __init__(self, game: Any) -> None:
@@ -13,19 +14,20 @@ class Monster:
         super().__init__()
         self.game = game
         self.game_stats = self.game.game_stats
-#        self.hero = self.game.hero
 
+    @abstractmethod
     def spawn(self) -> None:
         """Появление чудовища."""
         print("Перед вами появилось чудовище!")
 
+    @abstractmethod
     def attack(self) -> None:
         """Функция атаки чудовища."""
-        monster_power = self.game_stats.get_game_stats("monster", "power")
         print(
-            f"Противник атакует! Урон вашему здоровью составляет {monster_power} единиц."
+            f"Противник атакует! Урон вашему здоровью составляет {self.game_stats.monster_power} единиц."
         )
 
+    @abstractmethod
     def be_attacked(self) -> None:
         """Функция реакции чудовища на атаку героя."""
         pass
@@ -50,30 +52,30 @@ class EvilWizard(Monster):
 
     def spawn(self) -> None:
         """Появление злого чародея."""
+        self.game_stats.monster_type = "колдун"
         print(
             f"Перед вами возник злой чародей! Его мощь - {self.power}, а запас здоровья - {self.hp}."
         )
+        self.game_stats.monster_power = self.power
+        self.game_stats.monster_hp = self.hp
+        self.game.hero.react()
 
     def attack(self) -> None:
         """Функция атаки чародея."""
-        print(
-            f"Злой чародей атакует! Урон вашему здоровью составляет {self.power} единиц."
-        )
+        print("Злой чародей атакует!")
         self.game.hero.be_attacked()
 
     def be_attacked(self) -> None:
         """Функция реакции чародея на атаку героя."""
-        hero_attack = int(self.game_stats.get_game_stats("hero", "power"))
-        updated_hp = int(self.hp) - hero_attack
-        self.game_stats.update_game_stats("monster", updated_hp, "hp")
-        self.hp = updated_hp
-        if updated_hp <= 0:
+        updated_hp = self.game_stats.monster_hp - self.game_stats.hero_power
+        self.game_stats.monster_hp = updated_hp
+        if self.game_stats.monster_hp <= 0:
             print("Победа! Чародей пал! Движемся дальше...")
             sleep(1)
             self.game.run_game()
         print(
-            f"Злой колдун морщится от боли! Он потерял {hero_attack} здоровья."
-            f"Здоровья осталось {updated_hp} ."
+            f"Злой колдун морщится от боли! Он потерял {self.game_stats.hero_power} здоровья."
+            f"Здоровья осталось {self.game_stats.monster_hp} ."
         )
         self.attack()
 
@@ -91,30 +93,30 @@ class ArcherSkeleton(Monster):
 
     def spawn(self) -> None:
         """Появление скелета-лучника."""
+        self.game_stats.monster_type = "скелет"
         print(
             f"Вам на пути попался скелет-лучник! Его мощь - {self.power}, а запас здоровья - {self.hp}."
         )
+        self.game_stats.monster_power = self.power
+        self.game_stats.monster_hp = self.hp
+        self.game.hero.react()
 
     def attack(self) -> None:
         """Функция атаки скелета-лучника."""
-        print(
-            f"Скелет стреляет в вас из лука! Урон вашему здоровью составляет {self.power} единиц."
-        )
+        print("Скелет стреляет в вас из лука!")
         self.game.hero.be_attacked()
 
     def be_attacked(self) -> None:
         """Функция реакции скелета-лучника на атаку героя."""
-        hero_attack = int(self.game_stats.get_game_stats("hero", "power"))
-        updated_hp = int(self.hp) - hero_attack
-        self.game_stats.update_game_stats("monster", updated_hp, "hp")
-        self.hp = updated_hp
-        if updated_hp <= 0:
+        updated_hp = self.game_stats.monster_hp - self.game_stats.hero_power
+        self.game_stats.monster_hp = updated_hp
+        if self.game_stats.monster_hp <= 0:
             print("Победа! Скелет развалился на части! Движемся дальше...")
             sleep(1)
             self.game.run_game()
         print(
-            f"Из скелета вылетают кости! Он потерял {hero_attack} здоровья."
-            f"Здоровья осталось {updated_hp} ."
+            f"Из скелета вылетают кости! Он потерял {self.game_stats.hero_power} здоровья."
+            f"Здоровья осталось {self.game_stats.monster_hp} ."
         )
         self.attack()
 
@@ -132,54 +134,44 @@ class SwordsmanGoblin(Monster):
 
     def spawn(self) -> None:
         """Появление гоблина."""
+        self.game_stats.monster_type = "гоблин"
         print(
             f"Внезапно на вас выбегает гоблин с мечом! Его мощь - {self.power}, а запас здоровья - {self.hp}."
         )
+        self.game_stats.monster_power = self.power
+        self.game_stats.monster_hp = self.hp
+        self.game.hero.react()
 
     def attack(self) -> None:
         """Функция атаки гоблина."""
-        print(
-            f"Гоблин несется на вас с мечом! Урон вашему здоровью составляет {self.power} единиц."
-        )
+        print("Гоблин несется на вас с мечом!")
         self.game.hero.be_attacked()
 
     def be_attacked(self) -> None:
         """Функция реакции гоблина на атаку героя."""
-        hero_attack = int(self.game_stats.get_game_stats("hero", "power"))
-        updated_hp = int(self.hp) - hero_attack
-        self.game_stats.update_game_stats("monster", updated_hp, "hp")
-        self.hp = updated_hp
-        if self.hp <= 0:
+        updated_hp = self.game_stats.monster_hp - self.game_stats.hero_power
+        self.game_stats.monster_hp = updated_hp
+        if self.game_stats.monster_hp <= 0:
             print("Победа! Гоблин повержен! Движемся дальше...")
             sleep(1)
             self.game.run_game()
         print(
-            f"Гоблин ранен! Он потерял {hero_attack} здоровья."
-            f"Здоровья осталось {updated_hp}. "
+            f"Гоблин ранен! Он потерял {self.game_stats.hero_power} здоровья."
+            f"Здоровья осталось {self.game_stats.monster_hp}. "
         )
         self.attack()
 
 
-class MonsterFactory:
+class MonsterFactory(ABC):
     """Абстрактная фабрика игрового противника."""
 
     def __init__(self, game: Any) -> None:
         """Инициализация класса."""
         self.game = game
         super().__init__()
+        self.create_monster()
 
-    def generate_monster(self) -> None:
-        """Генератор чудовищ."""
-        monster_spawner = {
-            "evil_wizard": WizardFactory,
-            "skeleton_archer": SkeletonFactory,
-            "swordsman_goblin": GoblinFactory,
-        }
-        monsters_type_list = ["evil_wizard", "skeleton_archer", "swordsman_goblin"]
-        spawner_type = random.choice(monsters_type_list)
-        spawner = monster_spawner[spawner_type](self.game)
-        spawner.create_monster()
-
+    @abstractmethod
     def create_monster(self) -> object:
         """Создание чудовища."""
         pass
@@ -194,13 +186,12 @@ class WizardFactory(MonsterFactory):
         super().__init__(self.game)
         self.game_stats = self.game.game_stats
 
-    def create_monster(self) -> object:
+    def create_monster(self) -> None:
         """Создание злого чародея."""
         power = random.randint(6, 25)
         hp = random.randint(10, 40)
-        self.game_stats.update_game_stats("monster", power, "power")
-        self.game_stats.update_game_stats("monster", hp, "hp")
-        return EvilWizard(self.game, power, hp)
+        wizard = EvilWizard(self.game, power, hp)
+        wizard.spawn()
 
 
 class SkeletonFactory(MonsterFactory):
@@ -212,13 +203,12 @@ class SkeletonFactory(MonsterFactory):
         super().__init__(self.game)
         self.game_stats = self.game.game_stats
 
-    def create_monster(self) -> object:
+    def create_monster(self) -> None:
         """Создание скелетов-лучников."""
         power = random.randint(2, 15)
         hp = random.randint(5, 25)
-        self.game_stats.update_game_stats("monster", power, "power")
-        self.game_stats.update_game_stats("monster", hp, "hp")
-        return ArcherSkeleton(self.game, power, hp)
+        skeleton = ArcherSkeleton(self.game, power, hp)
+        skeleton.spawn()
 
 
 class GoblinFactory(MonsterFactory):
@@ -230,10 +220,9 @@ class GoblinFactory(MonsterFactory):
         super().__init__(self.game)
         self.game_stats = self.game.game_stats
 
-    def create_monster(self) -> object:
+    def create_monster(self) -> None:
         """Создание гоблинов."""
         power = random.randint(4, 20)
         hp = random.randint(5, 35)
-        self.game_stats.update_game_stats("monster", power, "power")
-        self.game_stats.update_game_stats("monster", hp, "hp")
-        return SwordsmanGoblin(self.game, power, hp)
+        goblin = SwordsmanGoblin(self.game, power, hp)
+        goblin.spawn()

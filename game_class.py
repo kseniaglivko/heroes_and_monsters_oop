@@ -3,8 +3,8 @@
 import random
 from game_stats import GameStats
 from heroes_factory import Hero
-from monsters_factory import Monster, MonsterFactory
-from items_factory import Item, ItemFactory
+from monsters_factory import Monster, MonsterFactory, WizardFactory, GoblinFactory, SkeletonFactory, SwordsmanGoblin, ArcherSkeleton, EvilWizard
+from items_factory import Item, ItemFactory, TotemFactory, AppleFactory, SpellFactory, SwordFactory, ArrowsFactory, BowFactory, Totem, Bow, Arrows, Spell, Sword
 from typing import Any
 
 
@@ -14,11 +14,16 @@ class Game:
     def __init__(self) -> None:
         """Инициализация класса."""
         self.game_stats = GameStats(self)
-        self.item = Item(self)
-        self.monster = Monster(self)
+        self.goblin = SwordsmanGoblin(self, self.game_stats.monster_power, self.game_stats.monster_hp)
+        self.skeleton = ArcherSkeleton(self, self.game_stats.monster_power, self.game_stats.monster_hp)
+        self.wizard = EvilWizard(self, self.game_stats.monster_power, self.game_stats.monster_hp)
+        self.totem = Totem(self)
+        self.bow = Bow(self)
+        self.arrows = Arrows(self, self.game_stats.arrows_quantity, self.game_stats.arrows_power)
+        self.sword = Sword(self, self.game_stats.sword_power)
+        self.spell = Spell(self, self.game_stats.spell_type, self.game_stats.spell_power)
         self.hero = Hero(self)
-        self.monster_factory = MonsterFactory(self)
-        self.item_factory = ItemFactory(self)
+        self.random_function = None
 
     def game_launch(self) -> Any:
         """Функция, реализующая запуск игры."""
@@ -29,17 +34,40 @@ class Game:
             "\nУдачи!"
         )
         self.game_stats.choose_hero()
-        self.run_game()
 
-    def run_game(self) -> Any:
+    def object_spawner(self) -> None:
+        """Генератор игровых предметов."""
+        item_spawner = {
+            "totem": TotemFactory,
+            "apple": AppleFactory,
+            "sword": SwordFactory,
+            "spell": SpellFactory,
+            "bow": BowFactory,
+            "arrows": ArrowsFactory,
+        }
+        item_type_list = ["totem", "apple", "sword", "spell", "bow", "arrows"]
+        spawner_type = random.choice(item_type_list)
+        spawner = item_spawner[spawner_type](self)
+        spawner.create_item()
+
+    def enemy_spawner(self) -> None:
+        """Генератор чудовищ."""
+        monster_spawner = {
+            "evil_wizard": WizardFactory,
+            "skeleton_archer": SkeletonFactory,
+            "swordsman_goblin": GoblinFactory,
+        }
+        monsters_type_list = ["evil_wizard", "skeleton_archer", "swordsman_goblin"]
+        spawner_type = random.choice(monsters_type_list)
+        spawner = monster_spawner[spawner_type](self)
+        spawner.create_monster()
+
+    def run_game(self) -> None:
         """Функция, реализующая игровой процесс."""
-        if int(self.game_stats.get_game_stats("monster_counter")) >= 10:
+        if self.game_stats.monster_counter >= 10:
             print("Вы спасли королевство от чудовищ и победили! Поздравляем!")
-#            self.game_stats.reset_stats()
+            self.game_stats.reset_stats()
             exit()
-        else:
-            spawn_monster = self.monster_factory.generate_monster
-            spawn_item = self.item_factory.generate_item
-            random_action_selector = [spawn_monster, spawn_item]
-            random_function = random.choice(random_action_selector)
-            random_function()
+        random_action_selector = [self.enemy_spawner, self.object_spawner]
+        self.random_function = random.choice(random_action_selector)
+        self.random_function()
