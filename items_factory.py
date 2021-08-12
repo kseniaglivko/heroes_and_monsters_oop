@@ -1,17 +1,15 @@
-"""
-Фабрика по производству игровых предметов.
-"""
+"""Фабрика по производству игровых предметов."""
 
-from abc import ABC, abstractmethod
 import random
 from time import sleep
 from typing import Any
 
 
-class Item(ABC):
+class Item:
     """Абстрактный класс игровых предметов."""
 
     def __init__(self, game: Any) -> None:
+        """Инициализация класса."""
         super().__init__()
         self.game = game
 
@@ -28,6 +26,7 @@ class Totem(Item):
     """Класс тотема."""
 
     def __init__(self, game: Any) -> None:
+        """Инициализация класса."""
         self.game = game
         super().__init__(self.game)
         self.game_stats = self.game.game_stats
@@ -52,6 +51,7 @@ class Apple(Item):
     """Класс целебного яблочка."""
 
     def __init__(self, game: Any, apple_hp: int) -> None:
+        """Инициализация класса."""
         self.game = game
         super().__init__(self.game)
         self.game_stats = self.game.game_stats
@@ -64,6 +64,7 @@ class Apple(Item):
         )
 
     def be_taken(self) -> None:
+        """Активация целебного яблочка."""
         hp = self.game_stats.get_game_stats("hero", "hp")
         updated_hp = hp + self.apple_hp
         self.game_stats.update_game_stats("hero", updated_hp, "hp")
@@ -74,6 +75,7 @@ class Sword(Item):
     """Класс меча."""
 
     def __init__(self, game: Any, power: int) -> None:
+        """Инициализация класса."""
         self.game = game
         super().__init__(self.game)
         self.game_stats = self.game.game_stats
@@ -95,6 +97,7 @@ class Spell(Item):
     """Класс заклинания."""
 
     def __init__(self, game: Any, spell_type: str, power: int) -> None:
+        """Инициализация класса."""
         self.game = game
         super().__init__(self.game)
         self.game_stats = self.game.game_stats
@@ -120,6 +123,7 @@ class Bow(Item):
     """Класс лука."""
 
     def __init__(self, game: Any) -> None:
+        """Инициализация класса."""
         self.game = game
         super().__init__(self.game)
         self.game_stats = self.game.game_stats
@@ -139,6 +143,7 @@ class Arrows(Item):
     """Класс стрел."""
 
     def __init__(self, game: Any, quantity: int, power: int) -> None:
+        """Инициализация класса."""
         self.game = game
         super().__init__(self.game)
         self.quantity = quantity
@@ -165,10 +170,11 @@ class Arrows(Item):
         sleep(1)
 
 
-class ItemFactory(ABC):
+class ItemFactory:
     """Абстрактная фабрика игровых предметов."""
 
     def __init__(self, game: Any) -> None:
+        """Инициализация класса."""
         self.game = game
         super().__init__()
 
@@ -188,6 +194,7 @@ class ItemFactory(ABC):
         spawner.create_item()
 
     def create_item(self) -> object:
+        """Создание игрового объекта."""
         pass
 
 
@@ -195,10 +202,12 @@ class TotemFactory(ItemFactory):
     """Фабрика по производству тотемов."""
 
     def __init__(self, game: Any) -> None:
+        """Инициализация класса."""
         self.game = game
         super().__init__(self.game)
 
     def create_item(self) -> object:
+        """Создание тотема."""
         return Totem(self.game)
 
 
@@ -206,10 +215,12 @@ class AppleFactory(ItemFactory):
     """Фабрика по производству целебных яблочек."""
 
     def __init__(self, game: Any) -> None:
+        """Инициализация класса."""
         self.game = game
         super().__init__(self.game)
 
     def create_item(self) -> object:
+        """Создание яблока."""
         apple_hp = random.randint(2, 4)
         return Apple(self.game, apple_hp)
 
@@ -218,10 +229,12 @@ class SwordFactory(ItemFactory):
     """Фабрика по производству мечей."""
 
     def __init__(self, game: Any) -> None:
+        """Инициализация класса."""
         self.game = game
         super().__init__(self.game)
 
     def create_item(self) -> object:
+        """Создание меча."""
         power = random.randint(4, 20)
         return Sword(self.game, power)
 
@@ -230,11 +243,13 @@ class SpellFactory(ItemFactory):
     """Фабрика по производству заклинаний."""
 
     def __init__(self, game: Any) -> None:
+        """Инициализация класса."""
         self.game = game
         super().__init__(self.game)
         self.game_stats = self.game.game_stats
 
     def create_item(self) -> object:
+        """Создание заклинания."""
         spells = self.game_stats.get_game_stats("spell", "type")
         power = random.randint(6, 25)
         spell_type = random.choice(spells)
@@ -245,10 +260,12 @@ class BowFactory(ItemFactory):
     """Фабрика по производству луков."""
 
     def __init__(self, game: Any) -> None:
+        """Инициализация класса."""
         self.game = game
         super().__init__(self.game)
 
     def create_item(self) -> object:
+        """Создание лука."""
         return Bow(self.game)
 
 
@@ -256,10 +273,12 @@ class ArrowsFactory(ItemFactory):
     """Фабрика по производству стрел."""
 
     def __init__(self, game: Any) -> None:
+        """Инициализация класса."""
         self.game = game
         super().__init__(self.game)
 
     def create_item(self) -> object:
+        """Создание стрел."""
         quantity = random.randint(1, 10)
         power = random.randint(5, 12)
         return Arrows(self.game, quantity, power)

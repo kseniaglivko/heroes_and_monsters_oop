@@ -1,6 +1,4 @@
-"""
-Фабрика по производству героев.
-"""
+"""Фабрика по производству героев."""
 
 from time import sleep
 from typing import Any
@@ -10,6 +8,7 @@ class Hero:
     """Класс героя."""
 
     def __init__(self, game: Any) -> None:
+        """Инициализация класса."""
         self.game = game
         self.game_stats = self.game.game_stats
         self.item = self.game.item

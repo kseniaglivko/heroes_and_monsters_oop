@@ -1,7 +1,4 @@
-"""
-Модуль, в котором инициализируется класс игры.
-Класс запускает и контролирует игровой процесс, а также собирает игровую статистику.
-"""
+"""Модуль, в котором инициализируется класс, контролирующий игровой процесс, а также собирающий игровую статистику."""
 
 import random
 from game_stats import GameStats
@@ -12,7 +9,10 @@ from typing import Any
 
 
 class Game:
+    """Класс игры."""
+
     def __init__(self) -> None:
+        """Инициализация класса."""
         self.game_stats = GameStats(self)
         self.item = Item(self)
         self.monster = Monster(self)

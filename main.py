@@ -1,6 +1,4 @@
-"""
-Запуск игры.
-"""
+"""Запуск игры."""
 
 from game_class import Game
 

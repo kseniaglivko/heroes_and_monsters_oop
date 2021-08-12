@@ -1,12 +1,7 @@
-"""
-Модуль, собирающий статистику о процессе игры. С помощью него будет реализовано сохранение игры.
-"""
+"""Модуль, собирающий статистику о процессе игры. С помощью него будет реализовано сохранение игры."""
 
 import json
-import jsonschema
-from statistics_schema import statistics_schema
 from typing import Any
-import ast
 
 # Дефолтные параметры игровой статистики. С ними начинаем игру.
 default_parameters = {
@@ -22,7 +17,10 @@ default_parameters = {
 
 
 class GameStats:
+    """Класс игровой статистики."""
+
     def __init__(self, game: Any) -> None:
+        """Инициализация класса."""
         self.game = game
 
     @staticmethod

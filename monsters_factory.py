@@ -1,17 +1,15 @@
-"""
-Фабрика по производству чудовищ.
-"""
+"""Фабрика по производству чудовищ."""
 
-from abc import ABC, abstractmethod
 from time import sleep
 import random
 from typing import Any
 
 
-class Monster(ABC):
+class Monster:
     """Абстрактный класс чудовищ."""
 
     def __init__(self, game: Any) -> None:
+        """Инициализация класса."""
         super().__init__()
         self.game = game
         self.game_stats = self.game.game_stats
@@ -43,6 +41,7 @@ class EvilWizard(Monster):
     """Класс злого чародея."""
 
     def __init__(self, game: Any, power: int, hp: int) -> None:
+        """Инициализация класса."""
         self.game = game
         super().__init__(self.game)
         self.game_stats = self.game.game_stats
@@ -83,6 +82,7 @@ class ArcherSkeleton(Monster):
     """Класс скелета-лучника."""
 
     def __init__(self, game: Any, power: int, hp: int) -> None:
+        """Инициализация класса."""
         self.game = game
         super().__init__(self.game)
         self.game_stats = self.game.game_stats
@@ -123,6 +123,7 @@ class SwordsmanGoblin(Monster):
     """Класс гоблина с мечом."""
 
     def __init__(self, game: Any, power: int, hp: int) -> None:
+        """Инициализация класса."""
         self.game = game
         super().__init__(self.game)
         self.game_stats = self.game.game_stats
@@ -159,10 +160,11 @@ class SwordsmanGoblin(Monster):
         self.attack()
 
 
-class MonsterFactory(ABC):
+class MonsterFactory:
     """Абстрактная фабрика игрового противника."""
 
     def __init__(self, game: Any) -> None:
+        """Инициализация класса."""
         self.game = game
         super().__init__()
 
@@ -187,11 +189,13 @@ class WizardFactory(MonsterFactory):
     """Фабрика по производству злых чародеев."""
 
     def __init__(self, game: Any) -> None:
+        """Инициализация класса."""
         self.game = game
         super().__init__(self.game)
         self.game_stats = self.game.game_stats
 
     def create_monster(self) -> object:
+        """Создание злого чародея."""
         power = random.randint(6, 25)
         hp = random.randint(10, 40)
         self.game_stats.update_game_stats("monster", power, "power")
@@ -203,11 +207,13 @@ class SkeletonFactory(MonsterFactory):
     """Фабрика по производству скелетов-лучников."""
 
     def __init__(self, game: Any) -> None:
+        """Инициализация класса."""
         self.game = game
         super().__init__(self.game)
         self.game_stats = self.game.game_stats
 
     def create_monster(self) -> object:
+        """Создание скелетов-лучников."""
         power = random.randint(2, 15)
         hp = random.randint(5, 25)
         self.game_stats.update_game_stats("monster", power, "power")
@@ -219,11 +225,13 @@ class GoblinFactory(MonsterFactory):
     """Фабрика по производству гоблинов с мечом."""
 
     def __init__(self, game: Any) -> None:
+        """Инициализация класса."""
         self.game = game
         super().__init__(self.game)
         self.game_stats = self.game.game_stats
 
     def create_monster(self) -> object:
+        """Создание гоблинов."""
         power = random.randint(4, 20)
         hp = random.randint(5, 35)
         self.game_stats.update_game_stats("monster", power, "power")
