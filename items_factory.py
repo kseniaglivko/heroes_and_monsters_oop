@@ -15,26 +15,13 @@ class Item(ABC):
         super().__init__()
         self.game = game
 
-    @abstractmethod
     def spawn(self) -> None:
-        """Генератор случайных игровых предметов."""
-        item_spawner = {
-            "totem": TotemFactory,
-            "apple": AppleFactory,
-            "sword": SwordFactory,
-            "spell": SpellFactory,
-            "bow": BowFactory,
-            "arrows": ArrowsFactory,
-        }
-        item_type_list = ["totem", "apple", "sword", "spell", "bow", "arrows"]
-        spawner_type = random.choice(item_type_list)
-        spawner = item_spawner[spawner_type](self.game)
-        spawner.create_item()
+        """"Появление игрового объекта."""
+        print("Перед вами появился игровой объект!")
 
-    @abstractmethod
     def be_taken(self) -> None:
         """Функция, регулирующая последствия того, что игрок взял игровой предмет."""
-        pass
+        print("Вы взяли игровой предмет!")
 
 
 class Totem(Item):
@@ -75,15 +62,12 @@ class Apple(Item):
         print(
             f"Вы нашли целебное яблоко! Съев его, вы восстановили {self.apple_hp} единиц здоровья."
         )
+
+    def be_taken(self) -> None:
         hp = self.game_stats.get_game_stats("hero", "hp")
         updated_hp = hp + self.apple_hp
         self.game_stats.update_game_stats("hero", updated_hp, "hp")
         sleep(1)
-
-    # Функция не будет переопределена ввиду того, что игрок поднимает яблоко сразу при нахождении.
-    # Отказаться от яблока нельзя.
-    def be_taken(self) -> None:
-        pass
 
 
 class Sword(Item):
@@ -176,7 +160,8 @@ class Arrows(Item):
         new_power = (power + self.power) / 2
         print(f"Поздравляем, теперь количество ваших стрел: {self.quantity}!")
         self.game_stats.update_game_stats("arrows", {new_quantity}, "quantity")
-        self.game_stats.update_game_stats("sword", {new_power}, "power")
+        self.game_stats.update_game_stats("arrows", {new_power}, "power")
+        self.game_stats.check_hero_type(self)
         sleep(1)
 
 
@@ -185,9 +170,23 @@ class ItemFactory(ABC):
 
     def __init__(self, game: Any) -> None:
         self.game = game
-        super().__init__(self.game)
+        super().__init__()
 
-    @abstractmethod
+    def generate_item(self) -> None:
+        """Генератор случайных игровых предметов."""
+        item_spawner = {
+            "totem": TotemFactory,
+            "apple": AppleFactory,
+            "sword": SwordFactory,
+            "spell": SpellFactory,
+            "bow": BowFactory,
+            "arrows": ArrowsFactory,
+        }
+        item_type_list = ["totem", "apple", "sword", "spell", "bow", "arrows"]
+        spawner_type = random.choice(item_type_list)
+        spawner = item_spawner[spawner_type](self.game)
+        spawner.create_item()
+
     def create_item(self) -> object:
         pass
 

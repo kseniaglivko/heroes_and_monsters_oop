@@ -6,7 +6,7 @@ import json
 import jsonschema
 from statistics_schema import statistics_schema
 from typing import Any
-
+import ast
 
 # Дефолтные параметры игровой статистики. С ними начинаем игру.
 default_parameters = {
@@ -29,10 +29,10 @@ class GameStats:
     def reset_stats() -> None:
         """Функция, обнуляющая игровую статистику."""
         with open("game_process_info.json", "w") as file:
-            json.dump(default_parameters, file)
+            json.dumps(default_parameters)
 
     @staticmethod
-    def get_game_stats(from_: str, what: str = None) -> None:
+    def get_game_stats(from_: str, what: str = None) -> str:
         """Функция, выводящая игровую статистику."""
         with open("game_process_info.json", "r") as file:
             try:
@@ -46,15 +46,16 @@ class GameStats:
     @staticmethod
     def update_game_stats(from_: str, value: Any, what: str = None) -> None:
         """Функция, обновляющая игровую статистику."""
-        file = open("game_process_info.json", "w+")
-        try:
-            game_info = json.load(file)
-            game_info[from_][what] = value
-            return json.dump(game_info, file)
-        except json.decoder.JSONDecodeError:
-            raise Exception(
-                "Ошибка инициализации игровой статистики. Пожалуйста, начните игру заново."
-            )
+        with open("game_process_info.json", "r") as file:
+            try:
+                game_info = json.load(file)
+                game_info[from_][what] = value
+                with open("game_process_info.json", "w") as f:
+                    json.dump(game_info, f)
+            except json.decoder.JSONDecodeError:
+                raise Exception(
+                    "Ошибка инициализации игровой статистики. Пожалуйста, начните игру заново."
+                )
 
     @staticmethod
     def save_game() -> None:
@@ -73,12 +74,50 @@ class GameStats:
 
     def choose_hero(self) -> None:
         """Функция, реализующая выбор персонажа."""
-        hero_input = input(
+        hero_input = (input(
             "Пожалуйста, выберите класс для вашего героя - Маг, Мечник или Лучник): "
-        ).capitalize()
-        try:
-            jsonschema.validate({"hero[type]": "hero_input"}, statistics_schema)
-        except jsonschema.exceptions.ValidationError:
-            print("Пожалуйста, выберите один из предложенные классов.")
+        )).lower()
+        if hero_input == "маг":
+            self.update_game_stats("hero", "маг", "type")
+        if hero_input == "мечник":
+            self.update_game_stats("hero", "мечник", "type")
+        if hero_input == "лучник":
+            self.update_game_stats("hero", "лучник", "type")
+        else:
+            print("Пожалуйста, выберите один из предложенных классов.")
             self.choose_hero()
-        self.update_game_stats("hero", hero_input, "type")
+
+    def check_hero_type(self) -> Any:
+        """Проверка типа героя и начисление ему бонусов к атаке в зависимости от типа найденного оружия."""
+        hero_type = self.get_game_stats("hero", "type")
+        if hero_type == "мечник":
+            if self.game.spawner_type == "sword":
+                print(
+                    "Ура! Поскольку вы - могучий мечник, то бонус к силе вашего меча +3!"
+                )
+                sword_power = int(self.get_game_stats("sword", "power"))
+                updated_power = sword_power + 3
+                self.update_game_stats("sword", updated_power, "hp")
+            else:
+                pass
+        if hero_type == "лучник":
+            if self.game.spawner_type == "arrows":
+                print(
+                    "Ура! Поскольку вы - отменный лучник, то бонус к силе ваших стрел +3!"
+                )
+                arrows_power = int(self.get_game_stats("arrows", "power"))
+                updated_power = arrows_power + 3
+                self.update_game_stats("arrows", updated_power, "hp")
+            else:
+                pass
+        if hero_type == "маг":
+            if self.game.spawner_type == "spell":
+                print(
+                    "Ура! Поскольку вы - великий маг, то бонус к силе вашего заклинания +3!"
+                )
+                spell_power = int(self.get_game_stats("spell", "power"))
+                updated_power = spell_power + 3
+                self.update_game_stats("spell", updated_power, "hp")
+            else:
+                pass
+        pass

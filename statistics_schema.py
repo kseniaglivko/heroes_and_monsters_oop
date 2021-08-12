@@ -31,7 +31,7 @@ statistics_schema = {
             "power": "int"
         },
         "hero": {
-            "type": ["Маг", "Мечник", "Лучник"],
+            "type": {"type": "str"},
             "power": {"type": "int"},
             "hp": {"type": "int"},
         },
