@@ -19,16 +19,28 @@ class RpgTestCase(TestCase):
     def fake_io_with_asserts(self, *args):
         """Обработка print() и input() в программе с проверками результата."""
         last_io = "".join(args)
-        if "БОЙ" in last_io:
+        if "Перед вами возник злой чародей!" in last_io:
             self.input = "1"
-        elif "MEЧ" in last_io:
+        if "Вам на пути попался скелет-лучник!" in last_io:
+            self.input = "1"
+        if "Внезапно на вас выбегает гоблин с мечом!" in last_io:
+            self.input = "1"                    
+        elif "тотем" in last_io:
             self.input = "2"
-        elif "ПОБЕДА" in last_io:
+        elif "меч" in last_io:
+            self.input = "1" 
+       elif "лук" in last_io:
+            self.input = "2"
+        elif "стрелы" in last_io:
+            self.input = "1"
+        elif "заклинание" in last_io:
+            self.input = "2"
+        elif "Победа!" in last_io:
             self.assertEqual(rpg.monster_counter, 10)
             self.assertTrue(rpg.hp > 0)
             self.victory_count += 1
             self.input = "\n"
-        elif "ПОРАЖЕНИЕ" in last_io:
+        elif "Поражение! Вы умерли :(" in last_io:
             self.assertTrue(rpg.monster_counter < 10)
             self.assertTrue(rpg.hp <= 0)
             self.fail_count += 1
