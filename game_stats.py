@@ -97,31 +97,3 @@ class GameStats:
             print("Пожалуйста, выберите один из предложенных классов.")
             self.choose_hero()
         self.game.run_game()
-
-    def check_hero_type(self) -> Any:
-        """Проверка типа героя и начисление ему бонусов к атаке в зависимости от типа найденного оружия."""
-        if self.hero_type == "мечник":
-            if self.item_type == "меч":
-                print(
-                    "Ура! Поскольку вы - могучий мечник, то бонус к силе вашего меча +3!"
-                )
-                self.sword_power += 3
-            else:
-                pass
-        if self.hero_type == "лучник":
-            if self.item_type == "стрелы":
-                print(
-                    "Ура! Поскольку вы - отменный лучник, то бонус к силе ваших стрел +3!"
-                )
-                self.arrows_power += 3
-            else:
-                pass
-        if self.hero_type == "маг":
-            if self.item_type == "заклинание":
-                print(
-                    "Ура! Поскольку вы - великий маг, то бонус к силе вашего заклинания +3!"
-                )
-                self.spell_power += 3
-            else:
-                pass
-        pass

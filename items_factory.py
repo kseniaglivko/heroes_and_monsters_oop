@@ -94,8 +94,11 @@ class Sword(Item):
     def be_taken(self) -> None:
         """Добавление меча в инвентарь."""
         print("Поздравляем, теперь у вас новый меч!")
+        if self.game_stats.hero_type == "мечник":
+                print(
+                    "Ура! Поскольку вы - могучий мечник, то бонус к силе вашего меча +3!"
+                )
         self.game_stats.sword_power = self.power
-        self.game_stats.check_hero_type()
         self.game.run_game()
 
 
@@ -116,6 +119,10 @@ class Spell(Item):
         print(
             f"Вы нашли свиток, это {self.spell_type}! Его мощь составляет {self.power}."
         )
+        if self.hero_type == "маг":
+            print(
+                "Ура! Поскольку вы - великий маг, то бонус к силе вашего заклинания +3!"
+            )            
         self.game.hero.react()
 
     def be_taken(self) -> None:
@@ -124,7 +131,6 @@ class Spell(Item):
         self.game_stats.spell_type = self.spell_type
         self.game_stats.spell_quantity = 1
         self.game_stats.spell_power = self.power
-        self.game_stats.check_hero_type()
         self.game.run_game()
 
 
@@ -168,6 +174,10 @@ class Arrows(Item):
             f"Вы нашли колчан со стрелами! Количество стрел в колчане: {self.quantity}, "
             f"а мощь одной стрелы составляет {self.power}."
         )
+        if self.game_stats.hero_type == "лучник":
+                print(
+                    "Ура! Поскольку вы - отменный лучник, то бонус к силе ваших стрел +3!"
+                )
         self.game.hero.react()
 
     def be_taken(self) -> None:
@@ -176,7 +186,6 @@ class Arrows(Item):
         new_power = (self.game_stats.arrows_power + self.power) / 2
         self.game_stats.arrows_power = new_power
         print(f"Поздравляем, теперь количество ваших стрел: {self.game_stats.arrows_quantity}!")
-        self.game_stats.check_hero_type()
         self.game.run_game()
 
 
@@ -234,7 +243,10 @@ class SwordFactory(ItemFactory):
 
     def create_item(self) -> None:
         """Создание меча."""
-        power = random.randint(4, 20)
+        if self.game_stats.hero_type == "мечник":
+            power = random.randint(7, 31)
+        else:        
+            power = random.randint(4, 20)
         sword = Sword(self.game, power)
         sword.spawn()
 
@@ -260,7 +272,10 @@ class SpellFactory(ItemFactory):
             "заклинание школы магии земли 'Земляной элементаль'",
             "заклинание школы магии воздуха 'Воздушный элементаль'",
         ]
-        power = random.randint(6, 25)
+        if self.game_stats.hero_type == "маг":
+            power = random.randint(9, 28)
+        else:        
+            power = random.randint(6, 25)
         spell_type = random.choice(spells)
         spell = Spell(self.game, spell_type, power)
         spell.spawn()
@@ -291,6 +306,9 @@ class ArrowsFactory(ItemFactory):
     def create_item(self) -> None:
         """Создание стрел."""
         quantity = random.randint(1, 10)
-        power = random.randint(5, 12)
+        if self.game_stats.hero_type == "лучник":
+            power = random.randint(8, 20)
+        else:        
+           power = random.randint(5, 12)
         arrows = Arrows(self.game, quantity, power)
         arrows.spawn()
