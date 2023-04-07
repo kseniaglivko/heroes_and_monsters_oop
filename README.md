@@ -1,54 +1,53 @@
-# Сиквел "Герой и Чудовища 2: волшебный тотем" (текстовая игра).
+[![Game CI](https://github.com/kseniaglivko/heroes_and_monsters_oop/actions/workflows/github-actions.yml/badge.svg)](https://github.com/kseniaglivko/heroes_and_monsters_oop/actions/workflows/github-actions.yml)
 
-Игрок - рыцарь в фантастической стране. Ваша задача - победить 10 чудовищ чтобы спасти королевство от нападения и тем самым выиграть игру.
+# Sequel "Hero and Monsters 2: Magic Totem" (text game)
 
+The player is a knight in a fantasy world. Your task is to defeat 10 monsters to save the kingdom from attack and thereby win the game.
 
-# Описание игры:
+# Game description:
 
-В игре есть ри вида чудовищ, каждый со своим типом атаки.
+The game has two types of monsters, each with its own type of attack.
 
-У героя тоже есть класс на выбор: он может быть воином, лучником или магом. Класс нужно выбрать в начале игры.
+The hero also has a choice of class: he can be a warrior, archer or mage. The class must be selected at the start of the game.
 
-Попадающиеся предметы тоже могут быть разными:
+Encountered items can also be different:
 
-    меч
+```
+sword 
 
-    лук
+bow 
 
-    стрелы
+arrows 
 
-    книга заклинаний
+book of spells 
 
-    яблочко
+apple 
 
-    тотем
+totem 
+```
 
-Если класс игрока — воин, то максимальный предел случайного показателя атаки от попадающегося меча должен быть увеличен. Воин может случайным образом защищаться от атак ближнего боя.
+- If the player's class is a warrior, the maximum limit of the random attack index from an encountered sword should be increased. A warrior can randomly defend against close-range attacks.
 
-Если класс игрока — лучник, то максимальный предел случайного показателя атаки от попадающегося лука должен быть увеличен. Лучник может случайным образом защищаться от атак лучников.
+- If the player's class is an archer, the maximum limit of the random attack index from an encountered bow should be increased. The archer can randomly defend against archer attacks.
 
-Если класс игрока — маг, то максимальный предел случайного показателя атаки от попадающейся книги заклинаний должен быть увеличен. Маг может случайным образом защищаться от магических атак.
+- If the player's class is a mage, the maximum limit of the random attack index from an encountered book of spells should be increased. The mage can randomly defend against magical attacks.
 
-При битве герою предоставляется тип атаки на выбор. Нельзя выбрать атаку оружие для которой недоступно.
+- In battle, the hero is offered a choice of attack type. It is not possible to choose an attack for which the weapon is unavailable.
 
-Независимо от класса, герой начинает свой путь с мечом.
+- Regardless of class, the hero starts his journey with a sword.
 
-Атака теперь ведётся пошагово. После каждого удара можно выбрать другую атаку если и протагонист и противник ещё живы. Во время боя есть вариант убежать от противника.
+Attacks are now made step-by-step. After each blow, you can choose another attack if the protagonist and the enemy are still alive. While fighting, there is an option to escape from the enemy.
 
-Тотем позволяет сохранить текущее состояние игры. Тотем можно подобрать или обойти. Если у героя есть тотем - можно при проигрыше загрузить игру с момента поднятия предыдущего волшебного тотема. Загрузка одноразовая - при использовании тотема место сохранения теряется. Можете воспринимать тотем как одноразовое сохранение.
+The totem saves the current game state and reloads it. The totem can be picked up or circumvented. If the hero has a totem - it is possible to reload the game from the moment the previous magical totem was raised upon failure. Reloading is single-use - when using the totem, the save location is lost. You can think of the totem as a one-time save.
 
+# Chosen projection template:
 
-# Выбранный шаблон проективания:
+Abstract factory.
 
-Абстрактная файбрика.
+# Justification for choosing the design template:
 
+When writing the game, objects will be created (monsters, heroes, weapons). The basic patterns of behavior of each object are the same, their behavior will differ only depending on the choice of object type (for example, hero-mage, monster-archer).
 
-# Обоснование выбора шаблона проектирования:
+Our abstract factory will create families of objects, and concrete factories for each of their types will be created from it.
 
-При написании игры будут создаваться объекты (чудовища, герои, оружие). Основные паттерны поведения каждого объекта одни и теже, поведение их будет различаться лишь в зависимости от выбора типа объекта (например, герой-маг, чудовище-лучник). 
-
-Наша абстрактная фабрика будет создавать семейства объетков, и из нее будут создаваться конкретные фабрики для каждого из типов таких объектов. 
-
-Таким образом, можно реализовать принцип открытости-закрытости, упростить добавление новых типов объектов, упростить поддержку кода.
-
-
+Thus, one can implement the open-closed principle, simplify adding new object types, simplify code support.
