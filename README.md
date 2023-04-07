@@ -1,3 +1,5 @@
+[![Game CI](https://github.com/kseniaglivko/heroes_and_monsters_oop/actions/workflows/github-actions.yml/badge.svg)](https://github.com/kseniaglivko/heroes_and_monsters_oop/actions/workflows/github-actions.yml)
+
 # Sequel "Hero and Monsters 2: Magic Totem" (text game)
 
 The player is a knight in a fantasy world. Your task is to defeat 10 monsters to save the kingdom from attack and thereby win the game.
