@@ -4,7 +4,7 @@ from objects.hero_class import HeroFactory
 from objects.item_class import spawn_item
 
 
-def game():
+def game() -> None:
     hero_factory = HeroFactory()
     hero_classes = {1: "warrior", 2: "archer", 3: "mage"}
     print("Choose your hero class (warrior, archer, mage): ")
